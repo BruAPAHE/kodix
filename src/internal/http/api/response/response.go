@@ -21,8 +21,8 @@ func Send(body interface{}, e error, w http.ResponseWriter) {
 	case ErrBadParams:
 		create(body, http.StatusBadRequest, e, w)
 		return
-	case city.ErrCityNotFound:
-		create(body, http.StatusNotFound, e, w)
+	case ErrServerError:
+		create(body, http.StatusInternalServerError, e, w)
 		return
 	default:
 		create(body, http.StatusOK, errors.New(""), w)
