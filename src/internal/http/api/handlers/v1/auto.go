@@ -17,11 +17,13 @@ func GetAutoById() http.HandlerFunc {
 		id, err := strconv.Atoi(autoId)
 		if err != nil {
 			response.Send(nil, response.ErrBadParams, writer)
+			return
 		}
 
 		result, err := facade.Services().Auto().GetAutoById(request.Context(), id)
 		if err != nil {
 			response.Send(nil, response.ErrServerError, writer)
+			return
 		}
 
 		response.Send(result, response.ErrEmpty, writer)
@@ -33,6 +35,7 @@ func GetAllAuto() http.HandlerFunc {
 		result, err := facade.Services().Auto().GetAllAuto(request.Context())
 		if err != nil {
 			response.Send(nil, response.ErrServerError, writer)
+			return
 		}
 
 		response.Send(result, response.ErrEmpty, writer)
@@ -55,13 +58,16 @@ func CreateUser() http.HandlerFunc {
 		)
 		if err := model.SetStatus(attribute.Status); err != nil {
 			response.Send(nil, response.ErrBadParams, writer)
+			return
 		}
 		if err := model.SetPrice(int(attribute.Price)); err != nil {
 			response.Send(nil, response.ErrBadParams, writer)
+			return
 		}
 
 		if err := facade.Services().Auto().CreateAuto(request.Context(), *model); err != nil {
 			response.Send(nil, response.ErrServerError, writer)
+			return
 		}
 		response.Send(nil, response.ErrEmpty, writer)
 	}
@@ -74,10 +80,12 @@ func UpdateAutoById() http.HandlerFunc {
 		id, err := strconv.Atoi(mux.Vars(request)["id"])
 		if err != nil {
 			response.Send(nil, response.ErrBadParams, writer)
+			return
 		}
 
 		if err := json.NewDecoder(request.Body).Decode(&attribute); err != nil {
 			response.Send(nil, response.ErrServerError, writer)
+			return
 		}
 
 		model := entity.NewAuto(
@@ -87,12 +95,15 @@ func UpdateAutoById() http.HandlerFunc {
 		)
 		if err := model.SetStatus(attribute.Status); err != nil {
 			response.Send(nil, response.ErrBadParams, writer)
+			return
 		}
 		if err := model.SetPrice(int(attribute.Price)); err != nil {
 			response.Send(nil, response.ErrBadParams, writer)
+			return
 		}
 		if err := facade.Services().Auto().UpdateAuto(request.Context(), *model, id); err != nil {
 			response.Send(nil, response.ErrServerError, writer)
+			return
 		}
 		response.Send(nil, response.ErrEmpty, writer)
 	}
@@ -104,10 +115,12 @@ func DeleteAutoById() http.HandlerFunc {
 		id, err := strconv.Atoi(autoId)
 		if err != nil {
 			response.Send(nil, response.ErrBadParams, writer)
+			return
 		}
 
 		if err := facade.Services().Auto().DeleteAuto(request.Context(), id); err != nil {
 			response.Send(nil, response.ErrServerError, writer)
+			return
 		}
 
 		response.Send(nil, response.ErrEmpty, writer)
