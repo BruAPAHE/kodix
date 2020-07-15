@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"kodix/src/internal/auto/entity"
 	"kodix/src/internal/models"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -28,7 +27,7 @@ func (a AutoRepository) GetById(ctx context.Context, id int) (*models.AutoAttrib
 	attributes := new(models.AutoAttributes)
 
 	if err := a.pool.FindOne(ctx, bson.M{
-		"_id": id,
+		"auto_id": id,
 	}).Decode(attributes); err != nil {
 		return nil, fmt.Errorf("server error")
 	}
@@ -61,14 +60,7 @@ func (a AutoRepository) GetAll(ctx context.Context) ([]*models.AutoAttributes, e
 }
 
 func (a AutoRepository) Create(ctx context.Context, auto models.AutoAttributes) error {
-	attributes := &models.AutoAttributes{
-		Brand:   auto.Brand(),
-		Model:   auto.Model(),
-		Price:   uint(auto.Price()),
-		Status:  auto.Status(),
-		Mileage: auto.Mileage(),
-	}
-	_, err := a.pool.InsertOne(ctx, attributes)
+	_, err := a.pool.InsertOne(ctx, auto)
 	if err != nil {
 		return fmt.Errorf("server error")
 	}
@@ -82,7 +74,7 @@ func (a AutoRepository) Update(ctx context.Context, auto models.AutoAttributes, 
 
 func (a AutoRepository) Delete(ctx context.Context, id int) error {
 	_, err := a.pool.DeleteOne(ctx, bson.M{
-		"_id": id,
+		"auto_id": id,
 	})
 	return err
 }

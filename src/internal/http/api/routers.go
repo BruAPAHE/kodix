@@ -51,7 +51,7 @@ func (r *Router) RegisterRoutes() {
 
 	r.Handler.HandleFunc("/v1/auto/{id:[0-9]+}",
 		middlewares.ApplyMiddleware(
-			v1.UpdateAutoById(),
+			v1.DeleteAutoById(),
 			middlewares.HeadersMiddleware,
 		),
 	).Methods(http.MethodDelete)
